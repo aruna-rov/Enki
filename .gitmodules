@@ -1,0 +1,6 @@
+[submodule "lib/FreeRTOS-POSIX"]
+	path = lib/FreeRTOS-POSIX
+	url = git@github.com:FreeRTOS/Lab-Project-FreeRTOS-POSIX.git
+[submodule "lib/Aruna"]
+	path = lib/Aruna
+	url = git@github.com:aruna-rov/Aruna.git
