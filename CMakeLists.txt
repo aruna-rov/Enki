@@ -115,3 +115,16 @@ target_link_libraries(Enki.elf FreeRTOS)
 
 add_dependencies(aruna FreeRTOS-POSIX)
 target_link_libraries(aruna FreeRTOS-POSIX)
+
+if (EXISTS "/usr/local/bin/bloaty")
+    if (EXISTS "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf")
+        add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
+                COMMAND bloaty ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.elf -- ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf
+                COMMAND cp ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.elf ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf
+                )
+    else ()
+        add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
+                COMMAND cp ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.elf ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf
+                )
+    endif ()
+endif ()
