@@ -17,16 +17,15 @@ set(SIZE arm-none-eabi-size)
 SET(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32F103C8Tx_FLASH.ld)
 
 #Uncomment for hardware floating point
-SET(FPU_FLAGS "-mfloat-abi=hard -mfpu=fpv4-sp-d16")
-add_definitions(-DARM_MATH_CM4 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING -D__FPU_PRESENT=1)
+#SET(FPU_FLAGS "-mfloat-abi=hard -mfpu=fpv4-sp-d16")
 
 #Uncomment for software floating point
-#SET(FPU_FLAGS "-mfloat-abi=soft")
+SET(FPU_FLAGS "-mfloat-abi=soft")
 
 SET(COMMON_FLAGS
     "-mcpu=cortex-m3 ${FPU_FLAGS} -mthumb -mthumb-interwork -ffunction-sections -fdata-sections \
     -g -fno-common -fmessage-length=0 -specs=nosys.specs -specs=nano.specs \
-    -finline-limit -flto -fshort-enums -Os -fdebug-prefix-map=/=")
+    -fshort-enums -Os -fdebug-prefix-map=/=")
 
 SET(CMAKE_CXX_FLAGS_INIT "${COMMON_FLAGS} -std=c++14")
 SET(CMAKE_C_FLAGS_INIT "${COMMON_FLAGS} -std=gnu99")
@@ -120,11 +119,9 @@ if (EXISTS "/usr/local/bin/bloaty")
     if (EXISTS "${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf")
         add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
                 COMMAND bloaty ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.elf -- ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf
-                COMMAND cp ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.elf ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf
-                )
-    else ()
-        add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
-                COMMAND cp ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.elf ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf
                 )
     endif ()
+    add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
+            COMMAND cp ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.elf ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.old.elf
+            )
 endif ()
